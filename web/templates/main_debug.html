@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main App Debug</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body x-data="appData()" x-init="init()" class="bg-gray-50">
+
+    <!-- Navigation -->
+    <div class="bg-white shadow p-4 mb-4">
+        <div class="flex space-x-4">
+            <button @click="switchTab('dashboard')" 
+                    :class="activeTab === 'dashboard' ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+                    class="px-4 py-2 rounded flex items-center">
+                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </button>
+            <button @click="switchTab('chat')" 
+                    :class="activeTab === 'chat' ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+                    class="px-4 py-2 rounded flex items-center">
+                <i class="fas fa-comments mr-2"></i>Chat
+                <span x-show="chatIntegrationStatus && chatIntegrationStatus.available" 
+                      class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    AI
+                </span>
+            </button>
+            <button @click="switchTab('validator')" 
+                    :class="activeTab === 'validator' ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+                    class="px-4 py-2 rounded flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>Validator
+            </button>
+        </div>
+    </div>
+
+    <!-- Debug Info -->
+    <div class="bg-white p-4 mb-4 rounded shadow mx-4">
+        <h3 class="font-bold mb-2">Debug Info:</h3>
+        <p>Active Tab: <span x-text="activeTab" class="font-mono bg-gray-100 px-2 py-1 rounded"></span></p>
+        <p>Chat Status: <span x-text="chatIntegrationStatus?.available ? 'Available' : 'Not Available'" class="font-mono bg-gray-100 px-2 py-1 rounded"></span></p>
+        <p>Chat Session: <span x-text="chatData.currentSessionId || 'None'" class="font-mono bg-gray-100 px-2 py-1 rounded"></span></p>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="mx-4 space-y-4">
+        <!-- Dashboard Tab -->
+        <div x-show="activeTab === 'dashboard'" class="bg-white p-6 rounded shadow">
+            <h2 class="text-xl font-bold mb-4">Dashboard Tab</h2>
+            <p>Dashboard content is working!</p>
+        </div>
+
+        <!-- Chat Tab -->
+        <div x-show="activeTab === 'chat'" class="bg-white p-6 rounded shadow">
+            <h2 class="text-xl font-bold mb-4">Chat Tab</h2>
+            
+            <!-- Chat Status Banner -->
+            <div x-show="chatIntegrationStatus && !chatIntegrationStatus.available" 
+                 class="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p class="text-yellow-800">Chat Integration Unavailable</p>
+                <p x-text="chatIntegrationStatus?.error || 'Main agent not available'" class="text-sm text-yellow-700"></p>
+            </div>
+
+            <!-- Chat Available -->
+            <div x-show="chatIntegrationStatus && chatIntegrationStatus.available" class="space-y-4">
+                <p class="text-green-600">✅ Chat integration is available!</p>
+                <button @click="startChatSession()" class="bg-blue-500 text-white px-4 py-2 rounded">Start Session</button>
+                <div x-show="chatData.currentSessionId">
+                    <p>Session ID: <span x-text="chatData.currentSessionId"></span></p>
+                    <button @click="clearChatSession()" class="bg-red-500 text-white px-4 py-2 rounded">Clear Session</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validator Tab -->
+        <div x-show="activeTab === 'validator'" class="bg-white p-6 rounded shadow">
+            <h2 class="text-xl font-bold mb-4">Code Validator Tab</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Code Type:</label>
+                    <select x-model="validatorData.codeType" class="border rounded px-3 py-2">
+                        <option value="php">PHP</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="css">CSS</option>
+                        <option value="html">HTML</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Code:</label>
+                    <textarea x-model="validatorData.code" class="w-full border rounded px-3 py-2" rows="4" 
+                              placeholder="Enter code to validate..."></textarea>
+                </div>
+                <button @click="validateCode()" class="bg-purple-500 text-white px-4 py-2 rounded">Validate Code</button>
+                
+                <div x-show="validatorData.results" class="mt-4 p-4 bg-gray-50 rounded">
+                    <h4 class="font-bold">Validation Results:</h4>
+                    <p>Score: <span x-text="validatorData.results?.score"></span></p>
+                    <p>Quality: <span x-text="validatorData.results?.codeQuality"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function appData() {
+            return {
+                activeTab: 'dashboard',
+                chatIntegrationStatus: null,
+                chatData: {
+                    messages: [],
+                    currentSessionId: null,
+                    newMessage: '',
+                    uploadedImages: []
+                },
+                validatorData: {
+                    code: '',
+                    codeType: 'php',
+                    results: null
+                },
+
+                switchTab(tab) {
+                    this.activeTab = tab;
+                    console.log('Switched to tab:', tab);
+                },
+
+                async loadChatStatus() {
+                    try {
+                        const response = await fetch('/api/status');
+                        const status = await response.json();
+                        this.chatIntegrationStatus = status.chat_integration;
+                        console.log('Chat integration status:', this.chatIntegrationStatus);
+                    } catch (error) {
+                        console.error('Error loading chat status:', error);
+                        this.chatIntegrationStatus = { available: false, error: 'Failed to load status' };
+                    }
+                },
+
+                async startChatSession() {
+                    try {
+                        const response = await fetch('/api/chat/start', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const result = await response.json();
+                        
+                        if (result.status === 'success') {
+                            this.chatData.currentSessionId = result.session_id;
+                            console.log('Chat session started:', result.session_id);
+                        } else {
+                            console.error('Error starting chat session:', result.error);
+                        }
+                    } catch (error) {
+                        console.error('Error starting chat session:', error);
+                    }
+                },
+
+                async clearChatSession() {
+                    if (!this.chatData.currentSessionId) return;
+                    
+                    try {
+                        const response = await fetch('/api/chat/clear', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ session_id: this.chatData.currentSessionId })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.status === 'success') {
+                            this.chatData.currentSessionId = null;
+                            this.chatData.messages = [];
+                            console.log('Chat session cleared');
+                        }
+                    } catch (error) {
+                        console.error('Error clearing chat session:', error);
+                    }
+                },
+
+                async validateCode() {
+                    if (!this.validatorData.code.trim()) return;
+                    
+                    try {
+                        const response = await fetch('/api/code/validate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                code: this.validatorData.code,
+                                type: this.validatorData.codeType
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.status === 'success') {
+                            this.validatorData.results = {
+                                score: result.validation_results?.score || result.score,
+                                codeQuality: result.validation_results?.code_quality || result.code_quality
+                            };
+                            console.log('Code validation completed:', this.validatorData.results);
+                        }
+                    } catch (error) {
+                        console.error('Error validating code:', error);
+                    }
+                },
+
+                init() {
+                    console.log('Main app debug initialized');
+                    this.loadChatStatus();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

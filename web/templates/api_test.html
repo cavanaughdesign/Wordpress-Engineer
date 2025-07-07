@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - WordPress Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">WordPress Engineer API Test</h1>
+        
+        <!-- Plugin Generation Test -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Plugin Generation Test</h2>
+            <button onclick="testPluginGeneration()" class="bg-blue-500 text-white px-4 py-2 rounded">
+                Test Plugin API
+            </button>
+            <pre id="plugin-result" class="mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+        </div>
+
+        <!-- Theme Generation Test -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Theme Generation Test</h2>
+            <button onclick="testThemeGeneration()" class="bg-green-500 text-white px-4 py-2 rounded">
+                Test Theme API
+            </button>
+            <pre id="theme-result" class="mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+        </div>
+
+        <!-- Security Scan Test -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Security Scan Test</h2>
+            <button onclick="testSecurityScan()" class="bg-red-500 text-white px-4 py-2 rounded">
+                Test Security API
+            </button>
+            <pre id="security-result" class="mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+        </div>
+
+        <!-- Terminal Test -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Terminal Test</h2>
+            <button onclick="testTerminal()" class="bg-purple-500 text-white px-4 py-2 rounded">
+                Test Terminal API
+            </button>
+            <pre id="terminal-result" class="mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+        </div>
+
+        <!-- Analytics Test -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Analytics Test</h2>
+            <button onclick="testAnalytics()" class="bg-yellow-500 text-white px-4 py-2 rounded">
+                Test Analytics API
+            </button>
+            <pre id="analytics-result" class="mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+        </div>
+    </div>
+
+    <script>
+        async function testPluginGeneration() {
+            const resultEl = document.getElementById('plugin-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/generate/plugin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        description: 'A contact form plugin with spam protection',
+                        name: 'Advanced Contact Form',
+                        complexity: 'intermediate'
+                    })
+                });
+                
+                const result = await response.json();
+                resultEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function testThemeGeneration() {
+            const resultEl = document.getElementById('theme-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/generate/theme', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        description: 'A modern responsive business theme',
+                        name: 'Professional Business',
+                        style: 'modern'
+                    })
+                });
+                
+                const result = await response.json();
+                resultEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function testSecurityScan() {
+            const resultEl = document.getElementById('security-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/security/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        path: 'C:\\xampp\\htdocs\\wordpress'
+                    })
+                });
+                
+                const result = await response.json();
+                resultEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function testTerminal() {
+            const resultEl = document.getElementById('terminal-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/terminal/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        command: 'echo Hello WordPress Engineer!'
+                    })
+                });
+                
+                const result = await response.json();
+                resultEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function testAnalytics() {
+            const resultEl = document.getElementById('analytics-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/analytics/stats');
+                const result = await response.json();
+                resultEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

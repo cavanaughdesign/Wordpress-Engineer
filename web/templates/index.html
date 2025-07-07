@@ -1,0 +1,466 @@
+{% extends "base_fixed.html" %}
+
+{% block title %}Dashboard - WordPress Engineer{% endblock %}
+
+{% block content %}
+<!-- Dashboard Tab -->
+<div x-show="activeTab === 'dashboard'" class="animate-fade-in">
+    <!-- Welcome Section -->
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 mb-8 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Welcome to WordPress Engineer</h1>
+                <p class="text-blue-100 text-lg">Your comprehensive WordPress development toolkit</p>
+            </div>
+            <div class="hidden md:block">
+                <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center animate-pulse-slow">
+                    <i class="fab fa-wordpress text-4xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
+                    <i class="fas fa-project-diagram text-green-600 dark:text-green-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Active Projects</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">12</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                    <i class="fas fa-code text-blue-600 dark:text-blue-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Lines of Code</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">24.5K</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+                    <i class="fas fa-plug text-purple-600 dark:text-purple-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Plugins Created</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">8</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900">
+                    <i class="fas fa-paint-brush text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Themes Built</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 mb-8">
+        <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button @click="switchTab('generator')" class="p-4 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
+                <i class="fas fa-magic text-2xl mb-2"></i>
+                <div class="font-semibold">Generate Plugin</div>
+                <div class="text-sm opacity-75">Create custom WordPress plugins</div>
+            </button>
+            <button @click="switchTab('generator')" class="p-4 bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition-colors">
+                <i class="fas fa-paint-brush text-2xl mb-2"></i>
+                <div class="font-semibold">Create Theme</div>
+                <div class="text-sm opacity-75">Design responsive themes</div>
+            </button>
+            <button @click="switchTab('wordpress')" class="p-4 bg-purple-50 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800 transition-colors">
+                <i class="fas fa-shield-alt text-2xl mb-2"></i>
+                <div class="font-semibold">Security Scan</div>
+                <div class="text-sm opacity-75">Check site security</div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- WordPress Development Tab -->
+<div x-show="activeTab === 'wordpress'" class="animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Security Scan -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                Security Scan
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">WordPress Installation Path</label>
+                    <input type="text" 
+                           value="C:\xampp\htdocs\wordpress"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                </div>
+                <button @click="alert('Security scan initiated!')" 
+                        class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-search mr-2"></i>Run Security Scan
+                </button>
+            </div>
+            
+            <!-- Mock Results -->
+            <div class="mt-6 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
+                <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Last Scan Results</h4>
+                <div class="text-sm text-green-700 dark:text-green-300">
+                    ✅ WordPress core up to date<br>
+                    ✅ Strong passwords detected<br>
+                    ⚠️ 2 plugins need updates<br>
+                    📊 Security Score: 85/100
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Optimization -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-database text-blue-600 mr-2"></i>
+                Database Optimization
+            </h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Database Host</label>
+                        <input type="text" 
+                               value="localhost"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Database Name</label>
+                        <input type="text" 
+                               value="wordpress"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                </div>
+                <button @click="alert('Database optimization started!')" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-cogs mr-2"></i>Optimize Database
+                </button>
+            </div>
+            
+            <!-- Mock Results -->
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+                <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Optimization Results</h4>
+                <div class="text-sm text-blue-700 dark:text-blue-300">
+                    🗑️ Removed 1,250 spam comments<br>
+                    📝 Cleaned 500 post revisions<br>
+                    💾 Space saved: 45 MB<br>
+                    ⚡ Performance improvement: 15%
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code Generator Tab -->
+<div x-show="activeTab === 'generator'" class="animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Plugin Generator -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-plug text-purple-600 mr-2"></i>
+                WordPress Plugin Generator
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Plugin Name</label>
+                    <input type="text" 
+                           x-model="pluginData.name"
+                           placeholder="My Awesome Plugin"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Description</label>
+                    <textarea x-model="pluginData.description"
+                              placeholder="Describe what your plugin should do..."
+                              rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Complexity</label>
+                    <select x-model="pluginData.complexity"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <button @click="generatePlugin()" 
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-magic mr-2"></i>Generate Plugin
+                </button>
+            </div>
+        </div>
+
+        <!-- Theme Generator -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-paint-brush text-green-600 mr-2"></i>
+                WordPress Theme Generator
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Theme Name</label>
+                    <input type="text" 
+                           x-model="themeData.name"
+                           placeholder="My Beautiful Theme"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Description</label>
+                    <textarea x-model="themeData.description"
+                              placeholder="Describe your theme design and features..."
+                              rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Style</label>
+                    <select x-model="themeData.style"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                        <option value="modern">Modern</option>
+                        <option value="classic">Classic</option>
+                        <option value="minimalist">Minimalist</option>
+                        <option value="creative">Creative</option>
+                    </select>
+                </div>
+                <button @click="generateTheme()" 
+                        class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-paint-brush mr-2"></i>Generate Theme
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Manager Tab -->
+<div x-show="activeTab === 'files'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-4">
+            <i class="fas fa-folder text-blue-600 mr-2"></i>
+            File Manager
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <h4 class="font-semibold mb-3">Project Files</h4>
+                <div class="border border-gray-300 dark:border-dark-600 rounded-lg p-4 h-64 overflow-y-auto bg-gray-50 dark:bg-dark-700">
+                    <div class="space-y-2">
+                        <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer">
+                            <i class="fas fa-folder text-yellow-500 mr-2"></i>
+                            <span>wp-content</span>
+                        </div>
+                        <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer ml-4">
+                            <i class="fas fa-folder text-yellow-500 mr-2"></i>
+                            <span>plugins</span>
+                        </div>
+                        <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer ml-8">
+                            <i class="fas fa-file-code text-blue-500 mr-2"></i>
+                            <span>my-plugin.php</span>
+                        </div>
+                        <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer ml-4">
+                            <i class="fas fa-folder text-yellow-500 mr-2"></i>
+                            <span>themes</span>
+                        </div>
+                        <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer ml-8">
+                            <i class="fas fa-file-code text-green-500 mr-2"></i>
+                            <span>style.css</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">File Editor</h4>
+                <textarea 
+                    placeholder="Select a file to edit..."
+                    rows="10"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono text-sm">
+<?php
+/*
+Plugin Name: Example Plugin
+Description: A sample WordPress plugin
+Version: 1.0.0
+*/
+
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Plugin code here...
+                </textarea>
+                <div class="mt-3">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors mr-2">
+                        <i class="fas fa-save mr-2"></i>Save File
+                    </button>
+                    <button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-download mr-2"></i>Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terminal Tab -->
+<div x-show="activeTab === 'terminal'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-4">
+            <i class="fas fa-terminal text-green-600 mr-2"></i>
+            WordPress Terminal
+        </h3>
+        <div class="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto mb-4">
+            <div>WordPress Engineer Terminal v2.0</div>
+            <div>Connected to localhost</div>
+            <div class="text-gray-500">Type commands and press Enter to execute</div>
+            <div class="mt-2">
+                <span class="text-blue-400">wordpress@engineer:~$</span> <span x-text="terminalOutput"></span>
+            </div>
+        </div>
+        <div class="flex space-x-2">
+            <input type="text" 
+                   x-model="terminalCommand"
+                   @keyup.enter="executeCommand()"
+                   placeholder="Enter command (e.g., ls, pwd, whoami)"
+                   class="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono">
+            <button @click="executeCommand()" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <i class="fas fa-play mr-2"></i>Execute
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics Tab -->
+<div x-show="activeTab === 'analytics'" class="animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-chart-line text-blue-600 mr-2"></i>
+                Development Statistics
+            </h3>
+            <canvas id="developmentChart" width="400" height="200"></canvas>
+        </div>
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-code text-purple-600 mr-2"></i>
+                Code Languages
+            </h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span>PHP</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-28 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">45%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>JavaScript</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-20 h-2 bg-yellow-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">25%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>CSS</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-12 h-2 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">15%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>HTML</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-8 h-2 bg-red-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">10%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Tab -->
+<div x-show="activeTab === 'settings'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-6">
+            <i class="fas fa-cog text-gray-600 mr-2"></i>
+            Settings
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h4 class="font-semibold mb-4">API Configuration</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">AI Provider</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                            <option value="anthropic">Anthropic (Claude)</option>
+                            <option value="openai">OpenAI (GPT)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">API Key</label>
+                        <input type="password" 
+                               placeholder="Enter your API key"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Preferences</h4>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span>Dark Mode</span>
+                        <button @click="toggleDarkMode()" 
+                                :class="darkMode ? 'bg-blue-600' : 'bg-gray-300'"
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                            <span :class="darkMode ? 'translate-x-6' : 'translate-x-1'"
+                                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Auto-save Files</span>
+                        <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600">
+                            <span class="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Notifications</span>
+                        <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600">
+                            <span class="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-save mr-2"></i>Save Settings
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

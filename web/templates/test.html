@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine.js Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="p-8" x-data="{ message: 'Alpine.js is working!' }">
+    <h1 class="text-2xl font-bold mb-4">Test Page</h1>
+    <div class="bg-green-100 p-4 rounded">
+        <p x-text="message"></p>
+        <button x-on:click="message = 'Button clicked!'" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">
+            Click me
+        </button>
+    </div>
+    
+    <script>
+        window.addEventListener('load', function() {
+            console.log('Page loaded');
+            setTimeout(function() {
+                console.log('Alpine available:', typeof Alpine !== 'undefined');
+                if (typeof Alpine === 'undefined') {
+                    document.body.innerHTML += '<div class="bg-red-100 p-4 mt-4 rounded"><p>Alpine.js failed to load!</p></div>';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

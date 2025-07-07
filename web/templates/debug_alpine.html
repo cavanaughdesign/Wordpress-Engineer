@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine.js Debug</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    
+    <!-- Simple Alpine.js Test -->
+    <div x-data="{ message: 'Hello Alpine!', count: 0 }" class="mb-8 p-4 bg-white rounded-lg shadow">
+        <h2 class="text-xl font-bold mb-4">Simple Alpine Test</h2>
+        <p x-text="message" class="mb-2"></p>
+        <p class="mb-2">Count: <span x-text="count"></span></p>
+        <button @click="count++" class="bg-blue-500 text-white px-4 py-2 rounded">Increment</button>
+        <button @click="message = 'Alpine is working!'" class="bg-green-500 text-white px-4 py-2 rounded ml-2">Change Message</button>
+    </div>
+
+    <!-- Tab System Test -->
+    <div x-data="{ activeTab: 'tab1' }" class="bg-white rounded-lg shadow p-4">
+        <h2 class="text-xl font-bold mb-4">Tab System Test</h2>
+        
+        <!-- Tab Navigation -->
+        <div class="border-b mb-4">
+            <nav class="-mb-px flex space-x-8">
+                <button @click="activeTab = 'tab1'" 
+                        :class="activeTab === 'tab1' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+                        class="py-2 px-1 border-b-2 font-medium text-sm">
+                    Tab 1
+                </button>
+                <button @click="activeTab = 'tab2'" 
+                        :class="activeTab === 'tab2' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+                        class="py-2 px-1 border-b-2 font-medium text-sm">
+                    Tab 2
+                </button>
+                <button @click="activeTab = 'tab3'" 
+                        :class="activeTab === 'tab3' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+                        class="py-2 px-1 border-b-2 font-medium text-sm">
+                    Tab 3
+                </button>
+            </nav>
+        </div>
+
+        <!-- Tab Content -->
+        <div x-show="activeTab === 'tab1'" class="p-4 bg-blue-50 rounded">
+            <h3 class="text-lg font-semibold">Tab 1 Content</h3>
+            <p>This is the content for tab 1</p>
+        </div>
+
+        <div x-show="activeTab === 'tab2'" class="p-4 bg-green-50 rounded">
+            <h3 class="text-lg font-semibold">Tab 2 Content</h3>
+            <p>This is the content for tab 2</p>
+        </div>
+
+        <div x-show="activeTab === 'tab3'" class="p-4 bg-purple-50 rounded">
+            <h3 class="text-lg font-semibold">Tab 3 Content</h3>
+            <p>This is the content for tab 3</p>
+        </div>
+
+        <!-- Debug Info -->
+        <div class="mt-4 p-2 bg-gray-100 rounded text-sm">
+            <strong>Debug:</strong> Active Tab = <span x-text="activeTab"></span>
+        </div>
+    </div>
+
+    <!-- Dark Mode Test -->
+    <div x-data="{ darkMode: false }" class="mt-8 p-4 bg-white rounded-lg shadow" :class="darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'">
+        <h2 class="text-xl font-bold mb-4">Dark Mode Test</h2>
+        <button @click="darkMode = !darkMode" class="bg-blue-500 text-white px-4 py-2 rounded">
+            Toggle Dark Mode
+        </button>
+        <p class="mt-2">Dark mode is: <span x-text="darkMode ? 'ON' : 'OFF'"></span></p>
+    </div>
+
+    <script>
+        // Debug Alpine.js
+        document.addEventListener('alpine:init', () => {
+            console.log('Alpine.js initialized successfully');
+        });
+        
+        window.addEventListener('load', () => {
+            console.log('Page loaded, Alpine status:', typeof Alpine !== 'undefined' ? 'loaded' : 'not loaded');
+        });
+    </script>
+</body>
+</html>

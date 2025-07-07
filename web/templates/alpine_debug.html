@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine.js Debug</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <div x-data="{ activeTab: 'dashboard', message: 'Alpine.js is working!' }">
+        <h1>Alpine.js Debug Test</h1>
+        
+        <p x-text="message"></p>
+        <p>Current tab: <strong x-text="activeTab"></strong></p>
+        
+        <div>
+            <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'bg-blue-500' : 'bg-gray-300'" style="padding: 10px; margin: 5px;">Dashboard</button>
+            <button @click="activeTab = 'chat'" :class="activeTab === 'chat' ? 'bg-blue-500' : 'bg-gray-300'" style="padding: 10px; margin: 5px;">Chat</button>
+            <button @click="activeTab = 'validator'" :class="activeTab === 'validator' ? 'bg-blue-500' : 'bg-gray-300'" style="padding: 10px; margin: 5px;">Validator</button>
+        </div>
+        
+        <div x-show="activeTab === 'dashboard'" style="padding: 20px; border: 1px solid #ccc; margin: 10px;">
+            <h2>Dashboard Tab</h2>
+            <p>This is the dashboard content.</p>
+        </div>
+        
+        <div x-show="activeTab === 'chat'" style="padding: 20px; border: 1px solid #ccc; margin: 10px;">
+            <h2>Chat Tab</h2>
+            <p>This is the chat content.</p>
+        </div>
+        
+        <div x-show="activeTab === 'validator'" style="padding: 20px; border: 1px solid #ccc; margin: 10px;">
+            <h2>Validator Tab</h2>
+            <p>This is the validator content.</p>
+        </div>
+    </div>
+    
+    <script>
+        console.log('Alpine.js debug page loaded');
+        document.addEventListener('alpine:init', () => {
+            console.log('Alpine.js initialized successfully');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,848 @@
+{% extends "base_fixed.html" %}
+
+{% block title %}Dashboard - WordPress Engineer{% endblock %}
+
+{% block content %}
+<!-- Dashboard Tab -->
+<div x-show="activeTab === 'dashboard'" class="animate-fade-in">
+    <!-- Welcome Section -->
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 mb-8 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Welcome to WordPress Engineer</h1>
+                <p class="text-blue-100 text-lg">Your comprehensive WordPress development toolkit</p>
+            </div>
+            <div class="hidden md:block">
+                <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center animate-pulse-slow">
+                    <i class="fab fa-wordpress text-4xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
+                    <i class="fas fa-project-diagram text-green-600 dark:text-green-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Active Projects</p>
+<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.projects"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                    <i class="fas fa-code text-blue-600 dark:text-blue-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Lines of Code</p>
+<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.lines_of_code"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+                    <i class="fas fa-plug text-purple-600 dark:text-purple-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Plugins Created</p>
+<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.plugins"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 transform hover:scale-105 transition-transform duration-200">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900">
+                    <i class="fas fa-paint-brush text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Themes Built</p>
+<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.themes"></p>
+                </div>
+            </div>
+        </div>
+    </div>    <!-- Quick Actions -->
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700 mb-8">
+        <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <button @click="switchTab('generator')" class="p-4 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
+                <i class="fas fa-magic text-2xl mb-2"></i>
+                <div class="font-semibold">Generate Plugin</div>
+                <div class="text-sm opacity-75">Create custom WordPress plugins</div>
+            </button>
+            <button @click="switchTab('generator')" class="p-4 bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition-colors">
+                <i class="fas fa-paint-brush text-2xl mb-2"></i>
+                <div class="font-semibold">Create Theme</div>
+                <div class="text-sm opacity-75">Design responsive themes</div>
+            </button>
+            <button @click="switchTab('wordpress')" class="p-4 bg-purple-50 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800 transition-colors">
+                <i class="fas fa-shield-alt text-2xl mb-2"></i>
+                <div class="font-semibold">Security Scan</div>
+                <div class="text-sm opacity-75">Check site security</div>
+            </button>
+            <button @click="switchTab('validator')" class="p-4 bg-yellow-50 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-800 transition-colors">
+                <i class="fas fa-check-circle text-2xl mb-2"></i>
+                <div class="font-semibold">Validate Code</div>
+                <div class="text-sm opacity-75">AI-powered code analysis</div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- WordPress Development Tab -->
+<div x-show="activeTab === 'wordpress'" class="animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Security Scan -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                Security Scan
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">WordPress Installation Path</label>
+                    <input type="text" 
+                           x-model="securityData.path"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                </div>                <button @click="runSecurityScan()" 
+                        :disabled="securityData.isScanning"
+                        :class="securityData.isScanning ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+                        class="w-full text-white px-4 py-2 rounded-lg transition-colors">
+                    <i :class="securityData.isScanning ? 'fas fa-spinner fa-spin' : 'fas fa-search'" class="mr-2"></i>
+                    <span x-text="securityData.isScanning ? 'Scanning...' : 'Run Security Scan'"></span>
+                </button>
+            </div>
+            
+            <!-- Dynamic Results -->
+            <div x-show="securityData.results" class="mt-6 p-4 rounded-lg"
+                 :class="securityData.results && securityData.results.issues && securityData.results.issues.length > 0 ? 'bg-red-50 dark:bg-red-900 text-red-800 dark:text-red-200' : 'bg-green-50 dark:bg-green-900 text-green-800 dark:text-green-200'">
+                <h4 class="font-semibold mb-2">Security Scan Results</h4>
+                <div x-show="securityData.results && securityData.results.issues && securityData.results.issues.length > 0">
+                    <p class="text-sm">⚠️ <span x-text="securityData.results.issues.length"></span> issues found</p>
+                    <ul class="list-disc list-inside text-sm mt-2">
+                        <template x-for="(issue, index) in securityData.results.issues" :key="index">
+                            <li><span x-text="issue.description"></span> (Severity: <span x-text="issue.severity"></span>)</li>
+                        </template>
+                    </ul>
+                </div>
+                <div x-show="!securityData.results || !securityData.results.issues || securityData.results.issues.length === 0">
+                    <p class="text-sm">✅ No critical issues found!</p>
+                </div>
+                <p class="text-sm mt-2">📊 Security Score: <span x-text="securityData.results?.score || 'N/A'"></span>/100</p>
+                <div x-show="securityData.results?.recommendations && securityData.results.recommendations.length > 0" class="mt-2">
+                    <h5 class="font-medium text-sm">Recommendations:</h5>
+                    <ul class="list-disc list-inside text-sm">
+                        <template x-for="(rec, index) in securityData.results.recommendations" :key="index">
+                            <li><span x-text="rec"></span></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Optimization -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-database text-blue-600 mr-2"></i>
+                Database Optimization
+            </h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Database Host</label>
+                        <input type="text" 
+                               x-model="databaseData.host"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Database Name</label>
+                        <input type="text" 
+                               x-model="databaseData.database"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                    <!-- Add user and password fields if needed for UI -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Database User</label>
+                        <input type="text" 
+                               x-model="databaseData.user"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Database Password</label>
+                        <input type="password" 
+                               x-model="databaseData.password"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                </div>                <button @click="optimizeDatabase()" 
+                        :disabled="databaseData.isOptimizing"
+                        :class="databaseData.isOptimizing ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                        class="w-full text-white px-4 py-2 rounded-lg transition-colors">
+                    <i :class="databaseData.isOptimizing ? 'fas fa-spinner fa-spin' : 'fas fa-cogs'" class="mr-2"></i>
+                    <span x-text="databaseData.isOptimizing ? 'Optimizing...' : 'Optimize Database'"></span>
+                </button>
+            </div>
+            
+            <!-- Dynamic Results -->
+            <div x-show="databaseData.results" class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg text-blue-800 dark:text-blue-200">
+                <h4 class="font-semibold mb-2">Optimization Results</h4>
+                <div class="text-sm">
+                    <p>🗑️ Removed: <span x-text="databaseData.results.space_saved || 'N/A'"></span></p>
+                    <p>📝 Tables Optimized: <span x-text="databaseData.results.tables_optimized || 'N/A'"></span></p>
+                    <p>⚡ Performance Improvement: <span x-text="databaseData.results.performance_improvement || 'N/A'"></span></p>
+                    <div x-show="databaseData.results.operations && databaseData.results.operations.length > 0" class="mt-2">
+                        <h5 class="font-medium text-sm">Operations Performed:</h5>
+                        <ul class="list-disc list-inside text-sm">
+                            <template x-for="(op, index) in databaseData.results.operations" :key="index">
+                                <li><span x-text="op"></span></li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>    </div>
+</div>
+
+<!-- Chat Interface Tab -->
+<div x-show="activeTab === 'chat'" class="animate-fade-in">
+    <!-- Chat Status Banner -->
+    <div x-show="!chatIntegrationAvailable" 
+         class="mb-6 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                    Chat Integration Unavailable
+                </h3>
+                <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                    <p>Main agent not available. Chat will work in demo mode.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface - Always show -->
+    <div class="h-[calc(100vh-200px)] flex flex-col">
+        <!-- Chat Header -->
+        <div class="bg-white dark:bg-dark-800 rounded-t-xl shadow-sm p-4 border border-gray-200 dark:border-dark-700 border-b-0">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-robot text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Chat with Mike</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            <span x-show="chatData.currentSessionId" class="text-green-600 dark:text-green-400">
+                                <i class="fas fa-circle text-xs mr-1"></i>Connected
+                            </span>
+                            <span x-show="!chatData.currentSessionId" class="text-gray-500">
+                                <i class="fas fa-circle text-xs mr-1"></i>Ready to connect
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button @click="startChatSession()" 
+                            class="px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-plus mr-1"></i>New Session
+                    </button>
+                    <button @click="clearChatSession()" 
+                            x-show="chatData.currentSessionId"
+                            class="px-3 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-trash mr-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="flex-1 bg-white dark:bg-dark-800 border-l border-r border-gray-200 dark:border-dark-700 overflow-y-auto p-4 space-y-4">
+            <!-- Welcome Message -->
+            <div x-show="chatData.messages.length === 0" class="text-center py-8">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-comments text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to Mike's Chat!</h3>
+                <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+                    Start a conversation with the WordPress Engineer AI. I can help with WordPress development, 
+                    analyze images, and answer any questions you have. You can also use voice input!
+                </p>
+            </div>            <!-- Chat Messages -->
+            <template x-for="message in chatData.messages" :key="message.timestamp">
+                <div :class="message.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                    <div :class="message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-dark-700 text-gray-900 dark:text-white'" 
+                         class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg shadow">
+                        <!-- User Message -->
+                        <template x-if="message.role === 'user'">
+                            <div>
+                                <div x-show="message.images && message.images.length > 0" class="mb-2">
+                                    <template x-for="image in message.images">
+                                        <div class="mb-2">
+                                            <img :src="image.url" :alt="image.name" class="max-w-full h-auto rounded border border-white border-opacity-20">
+                                            <p class="text-xs text-blue-100 mt-1" x-text="image.name"></p>
+                                        </div>
+                                    </template>
+                                </div>                                <p x-text="message.content"></p>
+                                <p class="text-xs text-blue-100 mt-1" x-text="new Date(message.timestamp).toLocaleTimeString()"></p>
+                            </div>
+                        </template>
+                        
+                        <!-- Assistant Message -->
+                        <template x-if="message.role === 'assistant'">
+                            <div>
+                                <div class="flex items-center mb-1">
+                                    <i class="fas fa-robot text-blue-600 dark:text-blue-400 mr-2"></i>
+                                    <span class="font-medium text-sm">Mike</span>
+                                </div>                                <div x-html="message.content.replace(/\n/g, '<br>')"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" x-text="new Date(message.timestamp).toLocaleTimeString()"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Loading Indicator -->
+            <div x-show="chatData.isLoading" class="flex justify-start">
+                <div class="bg-gray-100 dark:bg-dark-700 px-4 py-2 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot text-blue-600 dark:text-blue-400 mr-2"></i>
+                        <span class="font-medium text-sm text-gray-900 dark:text-white mr-2">Mike is typing</span>
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Upload Preview -->
+        <div x-show="chatData.uploadedImages.length > 0" 
+             class="bg-white dark:bg-dark-800 border-l border-r border-gray-200 dark:border-dark-700 p-3">
+            <div class="flex items-center space-x-2 overflow-x-auto">
+                <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">Images to send:</span>
+                <template x-for="(image, index) in chatData.uploadedImages" :key="index">
+                    <div class="relative flex-shrink-0">
+                        <img :src="image.url" :alt="image.name" class="w-12 h-12 object-cover rounded border">
+                        <button @click="removeUploadedImage(index)" 
+                                class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-red-600 transition-colors">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Chat Input Area -->
+        <div class="bg-white dark:bg-dark-800 rounded-b-xl shadow-sm p-4 border border-gray-200 dark:border-dark-700 border-t-0">
+            <div class="flex items-end space-x-2">
+                <!-- Image Upload Button -->
+                <label class="flex-shrink-0 cursor-pointer">
+                    <input type="file" multiple accept="image/*" @change="uploadImageForChat" class="hidden">
+                    <div class="w-10 h-10 bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 rounded-lg flex items-center justify-center transition-colors">
+                        <i class="fas fa-image text-gray-600 dark:text-gray-400"></i>
+                    </div>
+                </label>
+
+                <!-- Voice Recording Button -->
+                <button @click="startVoiceRecording()" 
+                        :class="chatData.isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600'"
+                        class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-colors">
+                    <i :class="chatData.isRecording ? 'fas fa-stop text-white' : 'fas fa-microphone text-gray-600 dark:text-gray-400'"></i>
+                </button>
+
+                <!-- Message Input -->
+                <div class="flex-1">
+                    <textarea x-model="chatData.newMessage" 
+                              @keydown.enter.prevent="!$event.shiftKey && sendChatMessage()"
+                              placeholder="Type your message here... (Shift+Enter for new line)"
+                              rows="1"
+                              class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              style="min-height: 40px; max-height: 120px;"></textarea>
+                </div>
+
+                <!-- Send Button -->
+                <button @click="sendChatMessage()" 
+                        :disabled="!chatData.newMessage.trim() && chatData.uploadedImages.length === 0"
+                        :class="(!chatData.newMessage.trim() && chatData.uploadedImages.length === 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                        class="flex-shrink-0 w-10 h-10 text-white rounded-lg flex items-center justify-center transition-colors">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>    </div>
+</div>
+
+<!-- Code Generator Tab -->
+<div x-show="activeTab === 'generator'" class="animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Plugin Generator -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-plug text-purple-600 mr-2"></i>
+                WordPress Plugin Generator
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Plugin Name</label>
+                    <input type="text" 
+                           x-model="pluginData.name"
+                           placeholder="My Awesome Plugin"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Description</label>
+                    <textarea x-model="pluginData.description"
+                              placeholder="Describe what your plugin should do..."
+                              rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Complexity</label>
+                    <select x-model="pluginData.complexity"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <button @click="generatePlugin()" 
+                        :disabled="pluginData.isGenerating"
+                        :class="pluginData.isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'"
+                        class="w-full text-white px-4 py-2 rounded-lg transition-colors">
+                    <i :class="pluginData.isGenerating ? 'fas fa-spinner fa-spin' : 'fas fa-magic'" class="mr-2"></i>
+                    <span x-text="pluginData.isGenerating ? 'Generating...' : 'Generate Plugin'"></span>
+                </button>
+            </div>
+            <!-- Results Display -->
+            <div x-show="pluginData.result" class="mt-6 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
+                <h4 class="font-semibold mb-2">Generated Plugin Code:</h4>
+                <pre class="bg-gray-100 dark:bg-dark-800 p-3 rounded-lg text-sm overflow-x-auto"><code class="language-php" x-text="pluginData.result?.code || 'No code generated.'"></code></pre>
+                <div x-show="pluginData.result?.files && pluginData.result.files.length > 0" class="mt-3">
+                    <h5 class="font-medium text-sm">Files Generated:</h5>
+                    <ul class="list-disc list-inside text-sm">
+                        <template x-for="(file, index) in pluginData.result.files" :key="index">
+                            <li x-text="file"></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Generator -->
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-paint-brush text-green-600 mr-2"></i>
+                WordPress Theme Generator
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Theme Name</label>
+                    <input type="text" 
+                           x-model="themeData.name"
+                           placeholder="My Beautiful Theme"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Description</label>
+                    <textarea x-model="themeData.description"
+                              placeholder="Describe your theme design and features..."
+                              rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Style</label>
+                    <select x-model="themeData.style"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                        <option value="modern">Modern</option>
+                        <option value="classic">Classic</option>
+                        <option value="minimalist">Minimalist</option>
+                        <option value="creative">Creative</option>
+                    </select>
+                </div>
+                <button @click="generateTheme()" 
+                        :disabled="themeData.isGenerating"
+                        :class="themeData.isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+                        class="w-full text-white px-4 py-2 rounded-lg transition-colors">
+                    <i :class="themeData.isGenerating ? 'fas fa-spinner fa-spin' : 'fas fa-paint-brush'" class="mr-2"></i>
+                    <span x-text="themeData.isGenerating ? 'Generating...' : 'Generate Theme'"></span>
+                </button>
+            </div>
+            <!-- Results Display -->
+            <div x-show="themeData.result" class="mt-6 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
+                <h4 class="font-semibold mb-2">Generated Theme Code:</h4>
+                <pre class="bg-gray-100 dark:bg-dark-800 p-3 rounded-lg text-sm overflow-x-auto"><code class="language-php" x-text="themeData.result?.code || 'No code generated.'"></code></pre>
+                <div x-show="themeData.result?.files && themeData.result.files.length > 0" class="mt-3">
+                    <h5 class="font-medium text-sm">Files Generated:</h5>
+                    <ul class="list-disc list-inside text-sm">
+                        <template x-for="(file, index) in themeData.result.files" :key="index">
+                            <li x-text="file"></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Manager Tab -->
+<div x-show="activeTab === 'files'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-4">
+            <i class="fas fa-folder text-blue-600 mr-2"></i>
+            File Manager
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <h4 class="font-semibold mb-3">Project Files</h4>
+                <div class="flex items-center mb-2">
+                    <button @click="fileManager.navigate('..')" 
+                            :disabled="fileManager.currentPath === '/'"
+                            class="p-1 rounded-full bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400" x-text="fileManager.currentPath"></span>
+                </div>
+                <div class="border border-gray-300 dark:border-dark-600 rounded-lg p-4 h-64 overflow-y-auto bg-gray-50 dark:bg-dark-700">
+                    <div x-show="fileManager.isLoading" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Loading files...</p>
+                    </div>
+                    <div x-show="!fileManager.isLoading && fileManager.files.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-folder-open text-4xl mb-4"></i>
+                        <p>No files found.</p>
+                    </div>
+                    <div x-show="!fileManager.isLoading && fileManager.files.length > 0" class="space-y-2">
+                        <template x-for="file in fileManager.files" :key="file.name">
+                            <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer"
+                                 @click="file.type === 'directory' ? fileManager.navigate(fileManager.currentPath + file.name + '/') : fileManager.readFile(fileManager.currentPath + file.name)">
+                                <i :class="file.type === 'directory' ? 'fas fa-folder text-yellow-500' : 'fas fa-file-code text-blue-500'" class="mr-2"></i>
+                                <span x-text="file.name"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">File Editor</h4>
+                <textarea 
+                    x-model="fileManager.fileContent"
+                    placeholder="Select a file to edit..."
+                    rows="10"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono text-sm">
+                </textarea>
+                <div class="mt-3">
+                    <button @click="fileManager.saveFile()" 
+                            :disabled="!fileManager.currentFile || fileManager.isSaving"
+                            :class="!fileManager.currentFile || fileManager.isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                            class="text-white px-4 py-2 rounded-lg transition-colors mr-2">
+                        <i :class="fileManager.isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'" class="mr-2"></i>
+                        <span x-text="fileManager.isSaving ? 'Saving...' : 'Save File'"></span>
+                    </button>
+                    <button @click="fileManager.downloadFile()" 
+                            :disabled="!fileManager.currentFile"
+                            :class="!fileManager.currentFile ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700'"
+                            class="text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-download mr-2"></i>Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code Validator Tab -->
+<div x-show="activeTab === 'validator'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-4">
+            <i class="fas fa-check-circle text-green-600 mr-2"></i>
+            AI-Powered Code Validator
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <h4 class="font-semibold mb-3">Code Input</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Code Type</label>
+                        <select x-model="validatorData.codeType" 
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                            <option value="php">PHP</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="css">CSS</option>
+                            <option value="html">HTML</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Code to Validate</label>
+                        <textarea x-model="validatorData.code"
+                                  placeholder="Paste your WordPress code here..."
+                                  rows="12"
+                                  class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono text-sm">
+<?php
+/*
+Plugin Name: Example Plugin
+Description: A sample WordPress plugin
+Version: 1.0.0
+*/
+
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+class Example_Plugin {
+    public function __construct() {
+        add_action('init', array($this, 'init'));
+    }
+    
+    public function init() {
+        // Plugin initialization
+    }
+}
+
+new Example_Plugin();
+?>
+                        </textarea>
+                    </div>
+                <button @click="validateCode()" 
+                            :disabled="validatorData.isValidating"
+                            :class="validatorData.isValidating ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+                            class="w-full text-white px-4 py-2 rounded-lg transition-colors">
+                        <i :class="validatorData.isValidating ? 'fas fa-spinner fa-spin' : 'fas fa-check'" class="mr-2"></i>
+                        <span x-text="validatorData.isValidating ? 'Validating...' : 'Validate Code with AI'"></span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">Validation Results</h4>
+                <div x-show="!validatorData.results && !validatorData.isValidating" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-code text-4xl mb-4"></i>
+                    <p>Paste your code and click validate to see AI-powered analysis</p>
+                </div>
+                <div x-show="validatorData.results || validatorData.isValidating" class="space-y-4">
+                    <!-- Loading Indicator -->
+                    <div x-show="validatorData.isValidating" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Analyzing code...</p>
+                    </div>
+                    
+                    <div x-show="!validatorData.isValidating && validatorData.results">
+                        <!-- Code Quality Score -->
+                        <div class="bg-gray-50 dark:bg-dark-700 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium">Code Quality Score</span>
+                                <span x-text="validatorData.results?.score || 0" 
+                                      :class="(validatorData.results?.score || 0) >= 85 ? 'text-green-600' : (validatorData.results?.score || 0) >= 70 ? 'text-yellow-600' : 'text-red-600'"
+                                      class="font-bold text-lg"></span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                <div :style="`width: ${validatorData.results?.score || 0}%`"
+                                     :class="(validatorData.results?.score || 0) >= 85 ? 'bg-green-500' : (validatorData.results?.score || 0) >= 70 ? 'bg-yellow-500' : 'bg-red-500'"
+                                     class="h-2 rounded-full transition-all duration-500"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Issues Found -->
+                        <div class="bg-gray-50 dark:bg-dark-700 rounded-lg p-4">
+                            <h5 class="font-medium mb-3">Issues Found</h5>
+                            <div x-show="!validatorData.results?.issues || validatorData.results.issues.length === 0" 
+                                 class="text-green-600 dark:text-green-400">
+                                <i class="fas fa-check-circle mr-2"></i>No issues found!
+                            </div>
+                            <div x-show="validatorData.results?.issues && validatorData.results.issues.length > 0" 
+                                 class="space-y-2">
+                                <template x-for="(issue, index) in validatorData.results?.issues || []" :key="index">
+                                    <div class="border-l-4 pl-3" 
+                                         :class="issue.severity === 'high' ? 'border-red-500' : issue.severity === 'medium' ? 'border-yellow-500' : 'border-blue-500'">
+                                        <div class="flex items-start">
+                                            <i :class="issue.severity === 'high' ? 'fas fa-exclamation-triangle text-red-500' : issue.severity === 'medium' ? 'fas fa-exclamation-circle text-yellow-500' : 'fas fa-info-circle text-blue-500'" 
+                                               class="mt-1 mr-2"></i>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium" x-text="issue.message"></p>
+                                                <p class="text-xs text-gray-600 dark:text-gray-400" x-text="'Line ' + (issue.line || 'Unknown')"></p>
+                                                <p x-show="issue.suggestion" class="text-xs text-blue-600 dark:text-blue-400 mt-1" x-text="issue.suggestion"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Suggestions -->
+                        <div x-show="validatorData.results?.suggestions && validatorData.results.suggestions.length > 0"
+                             class="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
+                            <h5 class="font-medium mb-3 text-blue-800 dark:text-blue-200">AI Recommendations</h5>
+                            <ul class="space-y-1">
+                                <template x-for="(suggestion, index) in validatorData.results?.suggestions || []" :key="index">
+                                    <li class="text-sm text-blue-700 dark:text-blue-300">
+                                        <i class="fas fa-lightbulb mr-2"></i>
+                                        <span x-text="suggestion"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terminal Tab -->
+<div x-show="activeTab === 'terminal'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-4">
+            <i class="fas fa-terminal text-green-600 mr-2"></i>
+            WordPress Terminal
+        </h3>
+        <div class="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto mb-4">
+            <div>WordPress Engineer Terminal v2.0</div>
+            <div>Connected to localhost</div>
+            <div class="text-gray-500">Type commands and press Enter to execute</div>
+            <div class="mt-2">
+                <span class="text-blue-400">wordpress@engineer:~$</span> <span x-text="terminalOutput"></span>
+            </div>
+        </div>
+        <div class="flex space-x-2">
+            <input type="text" 
+                   x-model="terminalCommand"
+                   @keyup.enter="executeCommand()"
+                   placeholder="Enter command (e.g., ls, pwd, whoami)"
+                   class="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono">
+            <button @click="executeCommand()" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <i class="fas fa-play mr-2"></i>Execute
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics Tab -->
+<div x-show="activeTab === 'analytics'" class="animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-chart-line text-blue-600 mr-2"></i>
+                Development Statistics
+            </h3>
+            <canvas id="developmentChart" width="400" height="200"></canvas>
+        </div>
+        <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+            <h3 class="text-xl font-bold mb-4">
+                <i class="fas fa-code text-purple-600 mr-2"></i>
+                Code Languages
+            </h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span>PHP</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-28 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">45%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>JavaScript</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-20 h-2 bg-yellow-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">25%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>CSS</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-12 h-2 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">15%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>HTML</span>
+                    <div class="flex items-center">
+                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                            <div class="w-8 h-2 bg-red-500 rounded-full"></div>
+                        </div>
+                        <span class="text-sm">10%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Tab -->
+<div x-show="activeTab === 'settings'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-6">
+            <i class="fas fa-cog text-gray-600 mr-2"></i>
+            Settings
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h4 class="font-semibold mb-4">API Configuration</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">AI Provider</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                            <option value="anthropic">Anthropic (Claude)</option>
+                            <option value="openai">OpenAI (GPT)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">API Key</label>
+                        <input type="password" 
+                               placeholder="Enter your API key"
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Preferences</h4>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span>Dark Mode</span>
+                        <button @click="toggleDarkMode()" 
+                                :class="darkMode ? 'bg-blue-600' : 'bg-gray-300'"
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                            <span :class="darkMode ? 'translate-x-6' : 'translate-x-1'"
+                                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Auto-save Files</span>
+                        <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600">
+                            <span class="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Notifications</span>
+                        <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600">
+                            <span class="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-save mr-2"></i>Save Settings
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
