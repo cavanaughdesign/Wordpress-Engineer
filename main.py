@@ -615,7 +615,7 @@ def setup_virtual_environment() -> Tuple[str, str]:
 client = Anthropic(api_key="your-anthropic-api-key")
 
 # Initialize the Tavily client
-tavily = TavilyClient(api_key="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")
+tavily = TavilyClient(api_key="")
 
 console = Console()
 
