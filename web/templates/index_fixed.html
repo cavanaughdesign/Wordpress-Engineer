@@ -29,7 +29,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Active Projects</p>
-<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.projects"></p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.projects"></p>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Lines of Code</p>
-<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.lines_of_code"></p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.lines_of_code"></p>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Plugins Created</p>
-<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.plugins"></p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.plugins"></p>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Themes Built</p>
-<p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.themes"></p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white" x-text="analytics.stats.themes"></p>
                 </div>
             </div>
         </div>
@@ -506,9 +506,9 @@
             <div>
                 <h4 class="font-semibold mb-3">Project Files</h4>
                 <div class="flex items-center mb-2">
-                    <button @click="fileManager.navigate('..')" 
+                    <button @click="fileManager.navigate(fileManager.currentPath.substring(0, fileManager.currentPath.lastIndexOf('/', fileManager.currentPath.length - 2) + 1))"
                             :disabled="fileManager.currentPath === '/'"
-                            class="p-1 rounded-full bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-600 dark:text-gray-400">
+                            class="p-1 rounded-full bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-600 dark:text-gray-400 disabled:opacity-50">
                         <i class="fas fa-arrow-up"></i>
                     </button>
                     <span class="ml-2 text-sm text-gray-600 dark:text-gray-400" x-text="fileManager.currentPath"></span>
@@ -526,7 +526,7 @@
                         <template x-for="file in fileManager.files" :key="file.name">
                             <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-dark-600 rounded cursor-pointer"
                                  @click="file.type === 'directory' ? fileManager.navigate(fileManager.currentPath + file.name + '/') : fileManager.readFile(fileManager.currentPath + file.name)">
-                                <i :class="file.type === 'directory' ? 'fas fa-folder text-yellow-500' : 'fas fa-file-code text-blue-500'" class="mr-2"></i>
+                                <i :class="file.type === 'directory' ? 'fas fa-folder text-yellow-500' : 'fas fa-file-alt text-blue-500'" class="mr-2"></i>
                                 <span x-text="file.name"></span>
                             </div>
                         </template>
@@ -534,25 +534,25 @@
                 </div>
             </div>
             <div>
-                <h4 class="font-semibold mb-3">File Editor</h4>
+                <h4 class="font-semibold mb-3" x-text="fileManager.currentFile ? `Editing: ${fileManager.currentFile}` : 'File Editor'"></h4>
                 <textarea 
                     x-model="fileManager.fileContent"
-                    placeholder="Select a file to edit..."
+                    placeholder="Select a file to view or edit..."
                     rows="10"
                     class="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono text-sm">
                 </textarea>
-                <div class="mt-3">
+                <div class="mt-3 flex space-x-2">
                     <button @click="fileManager.saveFile()" 
                             :disabled="!fileManager.currentFile || fileManager.isSaving"
-                            :class="!fileManager.currentFile || fileManager.isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
-                            class="text-white px-4 py-2 rounded-lg transition-colors mr-2">
+                            class="flex-1 text-white px-4 py-2 rounded-lg transition-colors"
+                            :class="!fileManager.currentFile || fileManager.isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'">
                         <i :class="fileManager.isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'" class="mr-2"></i>
                         <span x-text="fileManager.isSaving ? 'Saving...' : 'Save File'"></span>
                     </button>
                     <button @click="fileManager.downloadFile()" 
                             :disabled="!fileManager.currentFile"
-                            :class="!fileManager.currentFile ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700'"
-                            class="text-white px-4 py-2 rounded-lg transition-colors">
+                            class="flex-1 text-white px-4 py-2 rounded-lg transition-colors"
+                            :class="!fileManager.currentFile ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700'">
                         <i class="fas fa-download mr-2"></i>Download
                     </button>
                 </div>
@@ -705,23 +705,26 @@ new Example_Plugin();
             <i class="fas fa-terminal text-green-600 mr-2"></i>
             WordPress Terminal
         </h3>
-        <div class="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto mb-4">
+        <div class="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto mb-4" x-ref="terminal">
             <div>WordPress Engineer Terminal v2.0</div>
             <div>Connected to localhost</div>
             <div class="text-gray-500">Type commands and press Enter to execute</div>
-            <div class="mt-2">
-                <span class="text-blue-400">wordpress@engineer:~$</span> <span x-text="terminalOutput"></span>
-            </div>
+            <div class="mt-2" x-html="terminalData.output.replace(/\n/g, '<br>')"></div>
         </div>
         <div class="flex space-x-2">
             <input type="text" 
-                   x-model="terminalCommand"
-                   @keyup.enter="executeCommand()"
+                   x-model="terminalData.command"
+                   @keydown.enter="executeCommand()"
+                   @keydown.up.prevent="terminalData.historyUp()"
+                   @keydown.down.prevent="terminalData.historyDown()"
                    placeholder="Enter command (e.g., ls, pwd, whoami)"
                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white font-mono">
             <button @click="executeCommand()" 
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
-                <i class="fas fa-play mr-2"></i>Execute
+                    :disabled="terminalData.isExecuting"
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                    :class="terminalData.isExecuting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'">
+                <i :class="terminalData.isExecuting ? 'fas fa-spinner fa-spin' : 'fas fa-play'" class="mr-2"></i>
+                <span x-text="terminalData.isExecuting ? 'Executing...' : 'Execute'"></span>
             </button>
         </div>
     </div>
@@ -729,7 +732,11 @@ new Example_Plugin();
 
 <!-- Analytics Tab -->
 <div x-show="activeTab === 'analytics'" class="animate-fade-in">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div x-show="analytics.isLoading" class="text-center py-8 text-gray-500 dark:text-gray-400">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+        <p>Loading analytics data...</p>
+    </div>
+    <div x-show="!analytics.isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
             <h3 class="text-xl font-bold mb-4">
                 <i class="fas fa-chart-line text-blue-600 mr-2"></i>
@@ -742,44 +749,35 @@ new Example_Plugin();
                 <i class="fas fa-code text-purple-600 mr-2"></i>
                 Code Languages
             </h3>
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <span>PHP</span>
-                    <div class="flex items-center">
-                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
-                            <div class="w-28 h-2 bg-blue-500 rounded-full"></div>
+            <div class="space-y-3" x-show="Object.keys(analytics.performanceData).length > 0">
+                <template x-for="(value, key) in analytics.performanceData" :key="key">
+                    <div class="flex items-center justify-between">
+                        <span x-text="key"></span>
+                        <div class="flex items-center">
+                            <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
+                                <div :style="`width: ${value}%`" class="h-2 bg-blue-500 rounded-full"></div>
+                            </div>
+                            <span class="text-sm" x-text="`${value}%`"></span>
                         </div>
-                        <span class="text-sm">45%</span>
                     </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span>JavaScript</span>
-                    <div class="flex items-center">
-                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
-                            <div class="w-20 h-2 bg-yellow-500 rounded-full"></div>
-                        </div>
-                        <span class="text-sm">25%</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span>CSS</span>
-                    <div class="flex items-center">
-                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
-                            <div class="w-12 h-2 bg-green-500 rounded-full"></div>
-                        </div>
-                        <span class="text-sm">15%</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span>HTML</span>
-                    <div class="flex items-center">
-                        <div class="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-2">
-                            <div class="w-8 h-2 bg-red-500 rounded-full"></div>
-                        </div>
-                        <span class="text-sm">10%</span>
-                    </div>
-                </div>
+                </template>
             </div>
+            <div x-show="Object.keys(analytics.performanceData).length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <p>No language data available.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Tab -->
+<div x-show="activeTab === 'profile'" class="animate-fade-in">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-dark-700">
+        <h3 class="text-xl font-bold mb-6">
+            <i class="fas fa-user-circle text-gray-600 mr-2"></i>
+            User Profile
+        </h3>
+        <div class="text-center">
+            <p>Profile information will be displayed here.</p>
         </div>
     </div>
 </div>
@@ -830,19 +828,21 @@ new Example_Plugin();
                     </div>
                     <div class="flex items-center justify-between">
                         <span>Notifications</span>
-                        <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600">
-                            <span class="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-white transition-transform"></span>
+                        <button @click="toggleNotifications()"
+                                :class="notificationsEnabled ? 'bg-blue-600' : 'bg-gray-300'"
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                            <span :class="notificationsEnabled ? 'translate-x-6' : 'translate-x-1'"
+                                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="mt-8">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+            <button @click="saveSettings()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
                 <i class="fas fa-save mr-2"></i>Save Settings
             </button>
         </div>
     </div>
 </div>
 {% endblock %}
-

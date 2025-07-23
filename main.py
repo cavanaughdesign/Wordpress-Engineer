@@ -42,6 +42,9 @@ from instructions.tool_schemas import tools
 # Initialize RAG database
 rag_db = None
 
+# Add this global variable for the memory database path
+MEMORY_DB_PATH = "data/memory.db"
+
 # Add these to the global variable declarations section (around line 170)
 php_executor = None
 php_available = False
@@ -51,7 +54,7 @@ def initialize_rag_database():
     """Initialize the RAG database instance."""
     global rag_db
     try:
-        rag_db = RAGDatabase()
+        rag_db = RAGDatabase("data/wp_knowledge.db") # Pass the new path for wp_knowledge.db
         console.print(Panel("RAG database initialized successfully", title="RAG Database", style="green"))
         return True
     except Exception as e:
@@ -4960,5 +4963,3 @@ if __name__ == "__main__":
         logging.error(f"Unexpected error: {str(e)}", exc_info=True)
     finally:
         console.print("Program finished. Goodbye!", style="bold green")
-
-

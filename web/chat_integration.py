@@ -92,19 +92,26 @@ class WordPressEngineerChat:
     
     async def send_message(self, session_id: str, message: str, image_path: Optional[str] = None) -> Dict[str, Any]:
         """Send a message to the WordPress Engineer agent."""
+        if not isinstance(session_id, str):
+            logger.error(f"Invalid session_id type: {type(session_id)}")
+            return {"status": "error", "message": "Invalid session ID format."}
+
         try:
             if not MAIN_AGENT_AVAILABLE:
+                logger.warning("Main agent not available. Using fallback response.")
                 return {
-                    "status": "error",
+                    "status": "fallback",
+                    "response": "The main AI agent is currently unavailable. Please try again later.",
                     "message": "Main agent not available"
                 }
             
             if session_id not in self.active_sessions:
-                # Auto-create session if it doesn't exist
+                logger.info(f"New session created automatically: {session_id}")
                 await self.start_chat_session(session_id)
             
             # Update session info
             self.active_sessions[session_id]["message_count"] += 1
+            self.active_sessions[session_id]["last_message_time"] = asyncio.get_event_loop().time()
             
             # Add user message to session history
             user_message = {

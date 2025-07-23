@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     try {
         // Initialize components
-        initializeNotifications();
         initializeRealtimeUpdates();
         initializeKeyboardShortcuts();
         initializeTooltips();
@@ -60,56 +59,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
-
-// Notification System
-function initializeNotifications() {
-    window.WordPressEngineer.showNotification = function(message, type = 'info', duration = 5000) {
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm transition-all duration-300 transform translate-x-full ${getNotificationClasses(type)}`;
-        notification.innerHTML = `
-            <div class="flex items-center">
-                <i class="${getNotificationIcon(type)} mr-3"></i>
-                <span class="flex-1">${message}</span>
-                <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-xl leading-none hover:text-gray-300">×</button>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Trigger animation
-        setTimeout(() => {
-            notification.classList.remove('translate-x-full');
-        }, 10);
-        
-        // Auto remove
-        if (duration > 0) {
-            setTimeout(() => {
-                notification.classList.add('translate-x-full');
-                setTimeout(() => notification.remove(), 300);
-            }, duration);
-        }
-    };
-}
-
-function getNotificationClasses(type) {
-    const classes = {
-        success: 'bg-green-500 text-white',
-        error: 'bg-red-500 text-white',
-        warning: 'bg-yellow-500 text-white',
-        info: 'bg-blue-500 text-white'
-    };
-    return classes[type] || classes.info;
-}
-
-function getNotificationIcon(type) {
-    const icons = {
-        success: 'fas fa-check-circle',
-        error: 'fas fa-exclamation-circle',
-        warning: 'fas fa-exclamation-triangle',
-        info: 'fas fa-info-circle'
-    };
-    return icons[type] || icons.info;
-}
 
 // Real-time Updates
 function initializeRealtimeUpdates() {

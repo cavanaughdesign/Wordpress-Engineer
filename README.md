@@ -165,6 +165,15 @@ This groundbreaking AI agent represents a **paradigm shift** in WordPress develo
 - **A/B Testing**: Automated testing of different implementation approaches
 - **Best Practice Evolution**: Learns and applies emerging WordPress standards
 
+### 💻 **Sleek, Modern Web Interface**
+
+- **Intuitive Dashboard**: Get a complete overview of your projects at a glance.
+- **Real-time Analytics**: Monitor development statistics and code languages in real-time.
+- **Integrated File Manager**: Browse, edit, and manage your project files without leaving the UI.
+- **AI-Powered Code Validator**: Get instant feedback on your code with AI-powered analysis.
+- **Interactive Terminal**: Execute commands and see the output in a familiar terminal interface.
+- **Direct Chat with AI**: Communicate with the WordPress Engineer AI directly from the web UI.
+
 ---
 
 ## 📊 **REVOLUTIONARY PERFORMANCE METRICS**
@@ -381,6 +390,20 @@ python main.py
 
 #### Web Interface
 
+The web interface provides a comprehensive suite of tools for managing your WordPress projects.
+
+- **Dashboard**: Get a quick overview of your projects, including statistics, quick actions, and recent activity.
+- **WordPress Dev**: Perform security scans and database optimizations.
+- **Chat with Mike**: Interact with the WordPress Engineer AI directly from the web UI.
+- **Code Generator**: Generate plugins and themes with AI assistance.
+- **File Manager**: Browse, edit, and manage your project files.
+- **Code Validator**: Get instant feedback on your code with AI-powered analysis.
+- **Terminal**: Execute commands and see the output in a familiar terminal interface.
+- **Analytics**: Monitor development statistics and code languages in real-time.
+- **Settings**: Configure the application to your liking.
+
+To launch the web interface:
+
 ```bash
 # Navigate to web directory
 cd web
@@ -541,6 +564,18 @@ Help me migrate a WordPress multisite network:
 - `secure_wordpress_installation` - Security hardening
 - `analyze_wordpress_code` - Comprehensive code analysis
 - `analyze_database_queries` - Query performance analysis
+
+#### Web Interface Tools
+
+- `get_analytics_stats` - Get development analytics
+- `get_chat_history` - Get chat history for a session
+- `get_active_chat_sessions` - Get active chat sessions
+- `upload_file_for_chat` - Upload a file for chat analysis
+- `list_files` - List files in a directory
+- `read_file` - Read file content
+- `write_file` - Write content to a file
+- `execute_command` - Execute a terminal command
+- `search_codebase` - Search through the codebase
 
 #### Knowledge Management Tools
 
@@ -1057,7 +1092,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 1. **Bug Reports**: Use GitHub Issues with detailed reproduction steps
 2. **Feature Requests**: Submit enhancement proposals via GitHub Issues
 3. **Questions**: Use GitHub Discussions for general questions
-4. **Security Issues**: Email [security@yourproject.com](mailto:security@yourproject.com) for sensitive issues
+4. **Security Issues**: Email [acavanaugh@cavanaughdesignstudio.com](mailto:acavanaugh@cavanaughdesignstudio.com) for sensitive issues
 
 ### Response Times
 

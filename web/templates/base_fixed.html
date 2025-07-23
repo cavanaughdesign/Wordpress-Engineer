@@ -114,10 +114,44 @@
                     </button>
                     
                     <!-- Notifications -->
-                    <button class="relative p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-700 rounded-lg transition-colors">
-                        <i class="fas fa-bell"></i>
-                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-3 h-3 text-xs font-bold text-white bg-red-500 rounded-full"></span>
-                    </button>
+                    <div class="relative" x-data="{ notificationsOpen: false }">
+                        <button @click="notificationsOpen = !notificationsOpen" 
+                                class="relative p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-700 rounded-lg transition-colors"
+                                title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span x-show="notifications.some(n => !n.read)" 
+                                  class="absolute top-0 right-0 inline-flex items-center justify-center w-3 h-3 text-xs font-bold text-white bg-red-500 rounded-full"></span>
+                        </button>
+                        <div x-show="notificationsOpen" @click.outside="notificationsOpen = false"
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-dark-700 rounded-md shadow-lg py-1 z-50 overflow-hidden">
+                            <h3 class="px-4 py-2 text-sm font-semibold text-gray-800 dark:text-gray-100 border-b dark:border-dark-600">Notifications</h3>
+                            <template x-for="notification in notifications" :key="notification.id">
+                                <div :class="notification.read ? 'bg-gray-50 dark:bg-dark-800' : 'bg-blue-50 dark:bg-blue-900'"
+                                     class="flex items-start px-4 py-3 border-b dark:border-dark-600 last:border-b-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-600"
+                                     @click="notification.read = true; showNotification(notification.message, notification.type, 0)">
+                                    <div class="flex-shrink-0 pt-1">
+                                        <i :class="{
+                                            'fas fa-check-circle text-green-500': notification.type === 'success',
+                                            'fas fa-exclamation-circle text-red-500': notification.type === 'error',
+                                            'fas fa-exclamation-triangle text-yellow-500': notification.type === 'warning',
+                                            'fas fa-info-circle text-blue-500': notification.type === 'info'
+                                        }" class="w-4 h-4"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1">
+                                        <p class="text-sm font-medium" :class="notification.read ? 'text-gray-700 dark:text-gray-200' : 'text-gray-900 dark:text-white'" x-text="notification.message"></p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400" x-text="new Date(notification.timestamp).toLocaleString()"></p>
+                                    </div>
+                                </div>
+                            </template>
+                            <div x-show="notifications.length === 0" class="text-center py-4 text-sm text-gray-500 dark:text-gray-400">No new notifications</div>
+                        </div>
+                    </div>
                     
                     <!-- User Menu -->
                     <div class="flex items-center" x-data="{ open: false }">
@@ -132,14 +166,11 @@
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
                              class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-dark-700 rounded-md shadow-lg py-1 z-50">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-600">
+                            <a href="#" @click.prevent="switchTab('profile')" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-600">
                                 <i class="fas fa-user mr-2"></i>Profile
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-600">
+                            <a href="#" @click.prevent="switchTab('settings')" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-600">
                                 <i class="fas fa-cog mr-2"></i>Settings
-                            </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-600">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Sign out
                             </a>
                         </div>
                     </div>
@@ -160,6 +191,15 @@
                        class="flex items-center p-2 rounded-lg group transition-colors">
                         <i class="fas fa-tachometer-alt w-5 h-5"></i>
                         <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <!-- Profile -->
+                <li>
+                    <a href="#" @click.prevent="switchTab('profile')"
+                       :class="activeTab === 'profile' ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-dark-700'"
+                       class="flex items-center p-2 rounded-lg group transition-colors">
+                        <i class="fas fa-user w-5 h-5"></i>
+                        <span class="ml-3">Profile</span>
                     </a>
                 </li>
                   <!-- WordPress Development -->
@@ -255,47 +295,49 @@
     </div>
 
     <!-- Notification System -->
-    <div class="fixed top-4 right-4 z-50 space-y-4" x-show="notifications.length > 0">
-        <template x-for="notification in notifications" :key="notification.id">
-            <div x-show="notification" 
+    <div class="fixed top-16 right-4 z-50 space-y-2">
+        <template x-for="notification in notifications.filter(n => n.visible)" :key="notification.id">
+            <div 
+                 x-show="notification.visible"
+                 @mouseenter="notification.paused = true"
+                 @mouseleave="notification.paused = false"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 transform translate-x-full"
                  x-transition:enter-end="opacity-100 transform translate-x-0"
-                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave="transition ease-in duration-300"
                  x-transition:leave-start="opacity-100 transform translate-x-0"
                  x-transition:leave-end="opacity-0 transform translate-x-full"
                  :class="{
-                     'bg-green-50 border-green-200 text-green-800 dark:bg-green-900 dark:border-green-700 dark:text-green-200': notification.type === 'success',
-                     'bg-red-50 border-red-200 text-red-800 dark:bg-red-900 dark:border-red-700 dark:text-red-200': notification.type === 'error',
-                     'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900 dark:border-yellow-700 dark:text-yellow-200': notification.type === 'warning',
-                     'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-200': notification.type === 'info'
+                     'bg-green-100 border-green-400 text-green-700 dark:bg-green-800 dark:border-green-600 dark:text-green-100': notification.type === 'success',
+                     'bg-red-100 border-red-400 text-red-700 dark:bg-red-800 dark:border-red-600 dark:text-red-100': notification.type === 'error',
+                     'bg-yellow-100 border-yellow-400 text-yellow-700 dark:bg-yellow-800 dark:border-yellow-600 dark:text-yellow-100': notification.type === 'warning',
+                     'bg-blue-100 border-blue-400 text-blue-700 dark:bg-blue-800 dark:border-blue-600 dark:text-blue-100': notification.type === 'info'
                  }"
-                 class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto border">
+                 class="max-w-sm w-full shadow-lg rounded-lg pointer-events-auto border-l-4">
                 <div class="p-4">
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
-                            <!-- Success Icon -->
-                            <i x-show="notification.type === 'success'" class="fas fa-check-circle w-5 h-5"></i>
-                            <!-- Error Icon -->
-                            <i x-show="notification.type === 'error'" class="fas fa-times-circle w-5 h-5"></i>
-                            <!-- Warning Icon -->
-                            <i x-show="notification.type === 'warning'" class="fas fa-exclamation-triangle w-5 h-5"></i>
-                            <!-- Info Icon -->
-                            <i x-show="notification.type === 'info'" class="fas fa-info-circle w-5 h-5"></i>
+                             <i :class="{
+                                'fas fa-check-circle': notification.type === 'success',
+                                'fas fa-times-circle': notification.type === 'error',
+                                'fas fa-exclamation-triangle': notification.type === 'warning',
+                                'fas fa-info-circle': notification.type === 'info'
+                            }" class="w-5 h-5"></i>
                         </div>
                         <div class="ml-3 w-0 flex-1">
                             <p class="text-sm font-medium" x-text="notification.message"></p>
                         </div>
                         <div class="ml-4 flex-shrink-0 flex">
                             <button @click="removeNotification(notification.id)"
-                                    class="inline-flex text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    class="inline-flex text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
                                 <i class="fas fa-times w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </template>    </div>
+        </template>
+    </div>
 
     <!-- Custom JavaScript -->
   <!-- Custom JavaScript -->
@@ -356,9 +398,30 @@
                 },
                 
                 // Terminal
-                terminalCommand: '',
-                terminalOutput: '',
-                terminalHistory: [],
+                terminalData: {
+                    command: '',
+                    output: '',
+                    history: [],
+                    historyIndex: -1,
+                    isExecuting: false,
+
+                    historyUp() {
+                        if (this.historyIndex > 0) {
+                            this.historyIndex--;
+                            this.command = this.history[this.historyIndex];
+                        }
+                    },
+
+                    historyDown() {
+                        if (this.historyIndex < this.history.length - 1) {
+                            this.historyIndex++;
+                            this.command = this.history[this.historyIndex];
+                        } else {
+                            this.historyIndex = this.history.length;
+                            this.command = '';
+                        }
+                    }
+                },
                 
                 // Chat data
                 chatData: {
@@ -376,12 +439,88 @@
                     currentPath: '/',
                     files: [],
                     selectedFiles: [],
-                    isLoading: false
+                    isLoading: false,
+                    currentFile: null,
+                    fileContent: '',
+                    isSaving: false,
+
+                    async navigate(path) {
+                        this.loadFiles(path);
+                    },
+
+                    async readFile(path) {
+                        this.currentFile = path;
+                        try {
+                            const response = await fetch(`/api/files/read?path=${encodeURIComponent(path)}`);
+                            const result = await response.json();
+                            if (result.status === 'success') {
+                                this.fileContent = result.content;
+                            } else {
+                                this.showNotification('Error reading file: ' + (result.error || 'Unknown error'), 'error');
+                            }
+                        } catch (error) {
+                            this.showNotification('Error reading file: ' + error.message, 'error');
+                        }
+                    },
+
+                    async saveFile() {
+                        if (!this.currentFile) {
+                            this.showNotification('No file selected to save', 'error');
+                            return;
+                        }
+                        this.isSaving = true;
+                        try {
+                            const response = await fetch('/api/files/write', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    path: this.currentFile,
+                                    content: this.fileContent
+                                })
+                            });
+                            const result = await response.json();
+                            if (result.status === 'success') {
+                                this.showNotification('File saved successfully!', 'success');
+                            } else {
+                                this.showNotification('Error saving file: ' + (result.error || 'Unknown error'), 'error');
+                            }
+                        } catch (error) {
+                            this.showNotification('Error saving file: ' + error.message, 'error');
+                        } finally {
+                            this.isSaving = false;
+                        }
+                    },
+
+                    downloadFile() {
+                        if (!this.currentFile) {
+                            this.showNotification('No file selected to download', 'error');
+                            return;
+                        }
+                        const blob = new Blob([this.fileContent], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = this.currentFile.split('/').pop();
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }
                 },
                 
                 // Analytics
                 analytics: {
-                    stats: {},
+                    stats: {
+                        lines_of_code: 0,
+                        projects: 0,
+                        plugins: 0,
+                        themes: 0,
+                        security_score: 0,
+                        performance_score: 0,
+                        activity: [],
+                        recent_projects: [],
+                        languages: {}
+                    },
                     activityData: [],
                     performanceData: [],
                     isLoading: false
@@ -389,6 +528,7 @@
                 
                 // Notification system
                 notifications: [],
+                notificationsEnabled: localStorage.getItem('notificationsEnabled') === 'true',
                 
                 // Methods
                 
@@ -427,14 +567,20 @@
                 
                 // Notification methods
                 showNotification(message, type = 'info', duration = 5000) {
+                    if (!this.notificationsEnabled) {
+                        console.log('Notifications are disabled. Message:', message);
+                        return;
+                    }
                     const notification = {
                         id: Date.now(),
                         message,
                         type,
+                        read: false, // New notifications are unread by default
+                        timestamp: Date.now(),
                         visible: true
                     };
                     
-                    this.notifications.push(notification);
+                    this.notifications.unshift(notification); // Add to the beginning
                     
                     if (duration > 0) {
                         setTimeout(() => {
@@ -448,6 +594,17 @@
                     if (index > -1) {
                         this.notifications.splice(index, 1);
                     }
+                },
+
+                toggleNotifications() {
+                    this.notificationsEnabled = !this.notificationsEnabled;
+                    localStorage.setItem('notificationsEnabled', this.notificationsEnabled);
+                    this.showNotification(`Notifications ${this.notificationsEnabled ? 'enabled' : 'disabled'}`, 'info');
+                },
+
+                saveSettings() {
+                    // Placeholder for saving settings. Actual implementation would involve API calls.
+                    this.showNotification('Settings saved successfully!', 'success');
                 },
                 
                 // Plugin Generation
@@ -631,37 +788,42 @@
                 
                 // Terminal Operations
                 async executeCommand() {
-                    if (!this.terminalCommand.trim()) {
-                        this.showNotification('Please enter a command', 'error');
+                    if (!this.terminalData.command.trim()) {
                         return;
                     }
                     
-                    this.terminalData.isExecuting = true; // Set executing state
-                    this.terminalHistory.push(`wordpress@engineer:~$ ${this.terminalCommand}`); // Add command to history
-                    this.terminalOutput = this.terminalHistory.join('\n'); // Update display
-                    
+                    const commandToExecute = this.terminalData.command;
+                    this.terminalData.history.push(commandToExecute);
+                    this.terminalData.historyIndex = this.terminalData.history.length;
+                    this.terminalData.isExecuting = true;
+                    this.terminalData.output += `\n<span class="text-blue-400">wordpress@engineer:~$</span> ${commandToExecute}`;
+
                     try {
                         const response = await fetch('/api/terminal/execute', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                command: this.terminalCommand
+                                command: commandToExecute
                             })
                         });
                         
                         const result = await response.json();
                         
-                        if (result.status === 'success') {
-                            this.terminalHistory.push(result.output || result.error || 'Command executed');
-                        } else {
-                            this.terminalHistory.push('Error: ' + (result.error || 'Unknown error'));
+                        if (result.output) {
+                            this.terminalData.output += `\n${result.output}`;
                         }
+                        if (result.error) {
+                            this.terminalData.output += `\n<span class="text-red-400">${result.error}</span>`;
+                        }
+
                     } catch (error) {
-                        this.terminalHistory.push('Error: ' + error.message);
+                        this.terminalData.output += `\n<span class="text-red-400">Error: ${error.message}</span>`;
                     } finally {
-                        this.terminalOutput = this.terminalHistory.join('\n'); // Update display with new output
-                        this.terminalCommand = ''; // Clear input
-                        this.terminalData.isExecuting = false; // Reset executing state
+                        this.terminalData.command = '';
+                        this.terminalData.isExecuting = false;
+                        this.$nextTick(() => {
+                            this.$refs.terminal.scrollTop = this.$refs.terminal.scrollHeight;
+                        });
                     }
                 },
                 
@@ -716,21 +878,26 @@
                 },
                 
                 async sendChatMessage() {
-                    if (!this.chatData.newMessage.trim() || !this.chatData.currentSessionId) {
+                    if ((!this.chatData.newMessage.trim() && this.chatData.uploadedImages.length === 0) || !this.chatData.currentSessionId) {
                         return;
                     }
+
+                    const messageContent = this.chatData.newMessage;
+                    const imagesToSend = [...this.chatData.uploadedImages];
                     
-                    const message = this.chatData.newMessage;
-                    this.chatData.newMessage = '';
-                      // Add user message to chat
+                    // Add user message to chat UI
                     this.chatData.messages.push({
                         role: 'user',
-                        content: message,
+                        content: messageContent,
+                        images: imagesToSend,
                         timestamp: Date.now()
                     });
+
+                    // Clear inputs
+                    this.chatData.newMessage = '';
+                    this.chatData.uploadedImages = [];
                     
                     this.chatData.isLoading = true;
-                    this.chatData.isTyping = true;
                     
                     try {
                         const response = await fetch('/api/chat/message', {
@@ -738,12 +905,15 @@
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 session_id: this.chatData.currentSessionId,
-                                message: message
+                                message: messageContent,
+                                // Assuming the backend handles the image paths from a previous upload step
+                                // This part of the logic might need adjustment based on the exact implementation
+                                image_path: imagesToSend.length > 0 ? imagesToSend[0].path : null
                             })
                         });
                         
                         const result = await response.json();
-                          if (result.status === 'success') {
+                        if (result.status === 'success') {
                             this.chatData.messages.push({
                                 role: 'assistant',
                                 content: result.response,
@@ -757,7 +927,9 @@
                         this.showNotification('Error sending message: ' + error.message, 'error');
                     } finally {
                         this.chatData.isLoading = false;
-                        this.chatData.isTyping = false;
+                        this.$nextTick(() => {
+                            this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight;
+                        });
                     }
                 },
                 

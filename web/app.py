@@ -94,10 +94,12 @@ app = Flask(
     static_folder="static",
     template_folder="templates"
 )
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersecretkey123") # IMPORTANT: Change this to a strong, unique value in production!
+# SECURITY WARNING: The secret key should be set as an environment variable and be a long, random string.
+# For production, generate a key with `python -c 'import os; print(os.urandom(24))'`
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "a-secure-default-key-that-should-be-changed")
 
 # Configuration
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'web/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'php', 'js', 'css', 'html', 'py', 'md'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -549,11 +551,13 @@ def api_execute_command():
             logger.warning("Command missing for terminal execute request.")
             return jsonify({"error": "Command is required"}), 400
         
-        # Whitelist of allowed commands for security
+        # Whitelist of allowed commands for security.
+        # This is a critical security measure to prevent arbitrary code execution.
         allowed_commands = [
-            'dir', 'ls', 'pwd', 'whoami', 'echo', 'cat', 'type',
-            'git status', 'git log', 'git branch',
-            'npm version', 'node --version', 'python --version'
+            'dir', 'ls', 'pwd', 'whoami', 'echo', 'cat', 'type', # Basic file/system info
+            'git status', 'git log', 'git branch', 'git diff', 'git show', # Git commands
+            'npm -v', 'npm list', 'node -v', 'python --version', 'pip list', # Version/package listing
+            'wp --info', # WordPress CLI info
         ]
         
         # Check if command is allowed
@@ -613,46 +617,48 @@ def api_execute_command():
 def api_get_stats():
     """Get development analytics"""
     try:
-        # Generate dynamic stats
-        current_time = time.time()
-        base_date = current_time - (7 * 24 * 60 * 60)  # 7 days ago
+        # --- Lines of Code ---
+        total_lines = 0
+        for root, _, files in os.walk(project_root):
+            for file in files:
+                if file.endswith(('.php', '.js', '.css', '.html', '.py')):
+                    try:
+                        with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
+                            total_lines += len(f.readlines())
+                    except (IOError, UnicodeDecodeError):
+                        pass
+
+        # --- Project, Plugin, and Theme Counts ---
+        projects = [d for d in os.listdir(os.path.join(project_root, 'wp-content', 'themes')) if os.path.isdir(os.path.join(project_root, 'wp-content', 'themes', d))]
+        plugins = [d for d in os.listdir(os.path.join(project_root, 'wp-content', 'plugins')) if os.path.isdir(os.path.join(project_root, 'wp-content', 'plugins', d))]
         
+        # --- Git Activity ---
         activity = []
-        for i in range(7):
-            date = time.strftime('%Y-%m-%d', time.localtime(base_date + (i * 24 * 60 * 60)))
-            activity.append({
-                "date": date,
-                "commits": random.randint(1, 10),
-                "lines": random.randint(50, 500)
-            })
-        
+        try:
+            log_output = subprocess.check_output(['git', 'log', '--since="1.week.ago"', '--pretty=format:%ad', '--date=short'], cwd=project_root).decode('utf-8')
+            dates = [line.strip() for line in log_output.split('\n')]
+            for i in range(7):
+                date = (datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d')
+                activity.append({"date": date, "commits": dates.count(date)})
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            activity = []
+
         stats = {
-            "lines_of_code": random.randint(20000, 50000),
-            "projects": random.randint(8, 15),
-            "plugins": random.randint(5, 12),
-            "themes": random.randint(3, 8),
-            "security_score": random.randint(80, 95),
-            "performance_score": random.randint(85, 98),
+            "lines_of_code": total_lines,
+            "projects": len(projects),
+            "plugins": len(plugins),
+            "themes": len(projects),
+            "security_score": 88,  # Placeholder - requires a real security scanner
+            "performance_score": 92, # Placeholder - requires a real performance tool
             "activity": activity,
-            "recent_projects": [
-                {"name": "E-commerce Theme", "status": "active", "updated": "2 hours ago", "progress": 85},
-                {"name": "Contact Form Plugin", "status": "testing", "updated": "1 day ago", "progress": 95},
-                {"name": "Mobile App Integration", "status": "in_progress", "updated": "3 days ago", "progress": 60},
-                {"name": "SEO Optimization Plugin", "status": "completed", "updated": "1 week ago", "progress": 100}
-            ],
-            "languages": {
-                "PHP": 45,
-                "JavaScript": 25,
-                "CSS": 15,
-                "HTML": 10,
-                "Python": 5
-            }
+            "recent_projects": [], # Placeholder - requires project management data
+            "languages": {} # Placeholder - requires more detailed analysis
         }
         
         return jsonify({
             "status": "success",
             "stats": stats,
-            "generated_at": current_time
+            "generated_at": time.time()
         })
         
     except Exception as e:
@@ -710,40 +716,32 @@ def api_search():
             logger.warning("Search query missing.")
             return jsonify({"error": "Search query is required"}), 400
         
-        # Mock search results
-        mock_results = [
-            {
-                "title": "WordPress Plugin Development Guide",
-                "content": f"Comprehensive guide for developing WordPress plugins. Covers {query} and related topics.",
-                "score": 0.95,
-                "type": "documentation",
-                "url": "/docs/plugin-development"
-            },
-            {
-                "title": "Theme Customization Best Practices",
-                "content": f"Learn how to customize WordPress themes effectively. Includes {query} examples.",
-                "score": 0.87,
-                "type": "tutorial",
-                "url": "/docs/theme-customization"
-            },
-            {
-                "title": "Security Implementation",
-                "content": f"Security measures for WordPress development related to {query}.",
-                "score": 0.82,
-                "type": "guide",
-                "url": "/docs/security"
-            }
-        ]
+        results = []
+        start_time = time.time()
         
-        # Filter results based on query relevance
-        results = [r for r in mock_results if query.lower() in r['content'].lower()]
-        logger.info(f"Search performed for query: '{query}'. Found {len(results)} results.")
+        for root, _, files in os.walk(project_root):
+            for file in files:
+                if file.endswith(('.php', '.js', '.css', '.html', '.py', '.md', '.txt')):
+                    try:
+                        with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
+                            for i, line in enumerate(f):
+                                if query.lower() in line.lower():
+                                    results.append({
+                                        "title": os.path.basename(file),
+                                        "content": line.strip(),
+                                        "score": 1.0, # Placeholder score
+                                        "type": "code" if file.endswith(('.php', '.js', '.css', '.html', '.py')) else "documentation",
+                                        "url": os.path.join(root, file).replace(project_root, '')
+                                    })
+                    except (IOError, UnicodeDecodeError):
+                        pass
+
         return jsonify({
             "status": "success",
             "query": query,
             "results": results,
             "total": len(results),
-            "search_time": random.uniform(0.1, 0.5)
+            "search_time": time.time() - start_time
         })
         
     except Exception as e:

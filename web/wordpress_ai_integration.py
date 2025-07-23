@@ -49,7 +49,12 @@ class WordPressAIGenerator:
         Returns:
             Dict containing the plugin generation results
         """
+        if not plugin_name or not description:
+            logger.error("Plugin name and description are required.")
+            return {"status": "error", "message": "Plugin name and description cannot be empty."}
+
         try:
+            logger.info(f"Generating plugin '{plugin_name}' with complexity '{complexity}'...")
             # Create a prompt that leverages the AI conversation system
             prompt = f"""
             Create a WordPress plugin with the following specifications:
@@ -107,7 +112,12 @@ class WordPressAIGenerator:
         Returns:
             Dict containing the theme generation results
         """
+        if not theme_name or not description:
+            logger.error("Theme name and description are required.")
+            return {"status": "error", "message": "Theme name and description cannot be empty."}
+            
         try:
+            logger.info(f"Generating theme '{theme_name}' with style '{style}'...")
             # Create a prompt that leverages the AI conversation system
             prompt = f"""
             Create a WordPress theme with the following specifications:
